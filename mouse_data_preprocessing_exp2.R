@@ -80,27 +80,16 @@ decode_mouse_trace <- function(trace) {
   )
 }
 
-# -----------------------------------------------------------------------------
 # Input and output locations
-# -----------------------------------------------------------------------------
 
 args <- commandArgs(trailingOnly = TRUE)
 input_file <- if (length(args) >= 1) args[[1]] else "raw_data_exp2.csv"
-output_dir <- if (length(args) >= 2) args[[2]] else "cleaned_data"
+output_dir <- if (length(args) >= 2) args[[2]] else "cleaned_data_exp2"
 
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
-# -----------------------------------------------------------------------------
-# Read the mixed-width PCIbex file
-# -----------------------------------------------------------------------------
+# Read the PCIbex output file
 
-# The follow-up experiment has:
-#   * ordinary PCIbex rows with 13 fields; and
-#   * experimental rows with 28 fields.
-#
-# We remove only full comment lines before parsing. Using comment.char = "#"
-# would be unsafe here because the new partner-color fields contain hex values
-# beginning with # (e.g., #0072B2).
 raw_lines <- readLines(input_file, warn = FALSE, encoding = "UTF-8")
 if (length(raw_lines) > 0) {
   raw_lines[[1]] <- sub("^\ufeff", "", raw_lines[[1]])
@@ -138,8 +127,6 @@ if (ncol(raw_import) != 28) {
   stop("Expected 28 columns after padding, but read ", ncol(raw_import), ".")
 }
 
-# In 28-field rows, fields 13--27 contain the follow-up trial metadata and
-# field 28 contains comments. In ordinary 13-field rows, field 13 is comments.
 raw_events <- raw_import |>
   mutate(
     extended_layout = !is.na(field_14),
@@ -197,9 +184,7 @@ raw_events <- raw_import |>
     comments
   )
 
-# -----------------------------------------------------------------------------
 # Participant-level information
-# -----------------------------------------------------------------------------
 
 demographic_events <- raw_events |>
   filter(label == "intro-1", element_type == "Html")
@@ -244,9 +229,7 @@ participants <- demographic_events |>
   ) |>
   arrange(participant_id)
 
-# -----------------------------------------------------------------------------
 # Trial-level data
-# -----------------------------------------------------------------------------
 
 speaker_fields <- c(
   "partner", "partner_color", "strong_prime_speaker", "weak_prime_speaker",
@@ -377,9 +360,7 @@ trials <- experiment_events |>
   ) |>
   arrange(participant_id, trial_number)
 
-# -----------------------------------------------------------------------------
 # Decode mouse movements into one row per sample
-# -----------------------------------------------------------------------------
 
 movement_rows <- experiment_events |>
   filter(element_type == "MouseTracker", parameter == "Move") |>

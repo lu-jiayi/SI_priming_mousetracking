@@ -125,11 +125,10 @@ if (length(args) >= 1) {
 
 
 
-output_dir <- if (length(args) >= 2) args[[2]] else "cleaned_data"
+output_dir <- if (length(args) >= 2) args[[2]] else "cleaned_data_exp1"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-# -----------------------------------------------------------------------------
-# Read the mixed-width PCIbex file
-# -----------------------------------------------------------------------------
+
+# Read the pcibex files
 
 pcibex_names <- c(
   "reception_time", "participant_hash", "controller", "item_order",
@@ -156,8 +155,6 @@ if (ncol(raw_import) != 20) {
   stop("Expected 20 columns after padding, but read ", ncol(raw_import), ".")
 }
 
-# In 20-field rows, field_13 through field_19 contain trial metadata and
-# field_20 contains comments. In 13-field rows, field_13 itself is comments.
 raw_events <- raw_import |>
   mutate(
     extended_layout = !is.na(field_14),
@@ -193,9 +190,7 @@ raw_events <- raw_import |>
     comments
   )
 
-# -----------------------------------------------------------------------------
 # Participant-level information
-# -----------------------------------------------------------------------------
 demographic_events <- raw_events |>
   filter(label == "intro-1", element_type == "Html")
 
@@ -239,9 +234,7 @@ participants <- demographic_events |>
   ) |>
   arrange(participant_id)
 
-# -----------------------------------------------------------------------------
 # trial-level data
-# -----------------------------------------------------------------------------
 experiment_events <- raw_events |>
   filter(label == "actual") |>
   left_join(
@@ -357,9 +350,7 @@ trials <- experiment_events |>
   ) |>
   arrange(participant_id, trial_number)
 
-# -----------------------------------------------------------------------------
 # Decode mouse movements into one row per sample
-# -----------------------------------------------------------------------------
 
 movement_rows <- experiment_events |>
   filter(element_type == "MouseTracker", parameter == "Move") |>
@@ -408,9 +399,7 @@ mouse_trajectories <- movement_rows |>
   ) |>
   arrange(participant_id, trial_number, sample_index)
 
-# -----------------------------------------------------------------------------
 # Keep mouse clicks in a separate long-format table
-# -----------------------------------------------------------------------------
 
 clicks <- experiment_events |>
   filter(element_type == "MouseTracker", parameter == "Click") |>
@@ -456,9 +445,7 @@ clicks <- experiment_events |>
 trials_analysis <- trials |>
   filter(valid_response)
 
-# -----------------------------------------------------------------------------
-# Save outputs and report basic quality checks
-# -----------------------------------------------------------------------------
+# Save outputs and report basic summary
 
 write_csv(participants, file.path(output_dir, "participants.csv"), na = "")
 write_csv(
