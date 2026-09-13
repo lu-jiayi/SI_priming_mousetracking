@@ -1,0 +1,63 @@
+### Offline analysis ###
+
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
+ Family: binomial  ( logit )
+Formula: response ~ condition + (1 | participant_id)
+   Data: target_data_for_analysis
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+    651.5     665.5    -322.7     645.5       771 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.4845 -0.3257  0.0874  0.2128  3.7480 
+
+Random effects:
+ Groups         Name        Variance Std.Dev.
+ participant_id (Intercept) 11       3.316   
+Number of obs: 774, groups:  participant_id, 98
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)   2.0255     0.4429   4.573 4.81e-06 ***
+condition1   -0.8261     0.1295  -6.378 1.80e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+           (Intr)
+condition1 -0.160
+
+
+### AUC Analysis ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: AUC ~ response * condition + (1 + response | participant_id)
+   Data: trial_auc_for_analysis
+
+REML criterion at convergence: -2070.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.2491 -0.5247 -0.1708  0.2132  4.6256 
+
+Random effects:
+ Groups         Name        Variance  Std.Dev. Corr 
+ participant_id (Intercept) 0.0005396 0.02323       
+                response1   0.0003674 0.01917  -0.92
+ Residual                   0.0035016 0.05917       
+Number of obs: 774, groups:  participant_id, 98
+
+Fixed effects:
+                       Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)            0.041717   0.003843  61.083397  10.855 6.91e-16 ***
+response1             -0.025934   0.003714  56.463979  -6.982 3.57e-09 ***
+condition1             0.005343   0.002376 684.775942   2.249  0.02485 *  
+response1:condition1  -0.007868   0.002383 683.334419  -3.301  0.00101 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) rspns1 cndtn1
+response1   -0.723              
+condition1   0.098 -0.149       
+rspns1:cnd1 -0.130  0.088 -0.397

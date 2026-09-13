@@ -1,0 +1,63 @@
+### Offline analysis ###
+Generalized linear mixed model fit by maximum likelihood (Laplace Approximation) ['glmerMod']
+ Family: binomial  ( logit )
+Formula: response ~ condition + (1 + condition | participant_id)
+   Data: target_data_for_analysis
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+    951.2     976.6    -470.6     941.2      1180 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.59436 -0.26439 -0.04226  0.18218  2.87339 
+
+Random effects:
+ Groups         Name        Variance Std.Dev. Corr
+ participant_id (Intercept) 17.09    4.134        
+                condition1   2.56    1.600    0.77
+Number of obs: 1185, groups:  participant_id, 100
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  -0.5968     0.4613  -1.294 0.195821    
+condition1   -0.8324     0.2269  -3.668 0.000244 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+           (Intr)
+condition1 0.667 
+
+### AUC Analysis ###
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: AUC ~ response * condition + (1 + response + condition | participant_id)
+   Data: trial_auc_for_analysis
+
+REML criterion at convergence: -3250.4
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.7445 -0.5146 -0.1719  0.2116  7.6154 
+
+Random effects:
+ Groups         Name        Variance  Std.Dev. Corr       
+ participant_id (Intercept) 3.841e-04 0.019597            
+                response1   3.014e-04 0.017362 -0.90      
+                condition1  7.749e-05 0.008803 -0.08 -0.26
+ Residual                   3.244e-03 0.056958            
+Number of obs: 1185, groups:  participant_id, 100
+
+Fixed effects:
+                       Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)           2.979e-02  2.804e-03  9.014e+01  10.624  < 2e-16 ***
+response1            -1.512e-02  2.733e-03  8.466e+01  -5.533 3.45e-07 ***
+condition1            1.962e-03  1.933e-03  1.007e+02   1.015    0.313    
+response1:condition1 -9.404e-06  1.869e-03  2.323e+02  -0.005    0.996    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) rspns1 cndtn1
+response1   -0.497              
+condition1  -0.042 -0.179       
+rspns1:cnd1 -0.138 -0.054  0.084
