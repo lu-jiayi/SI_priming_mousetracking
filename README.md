@@ -1,7 +1,7 @@
 This repo contains the raw data for Exp1 and Exp2 directly downloaded from PCIbex:
 
 * raw\_data.csv (Exp1)
-* raw\_data.csv (Exp2)
+* raw\_data\_exp2.csv (Exp2)
 
 
 
